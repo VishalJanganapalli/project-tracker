@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const generateToken = (id) => {
@@ -10,6 +11,11 @@ const generateToken = (id) => {
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database connection unavailable' });
+    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -47,6 +53,11 @@ exports.login = async (req, res) => {
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Please provide email and password' });
+    }
+
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database connection unavailable' });
     }
 
     const user = await User.findOne({ email }).select('+password');
