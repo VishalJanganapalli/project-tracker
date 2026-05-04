@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const generateToken = (id) => {
@@ -11,11 +10,6 @@ const generateToken = (id) => {
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-
-    // Check if database is connected
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ message: 'Database connection unavailable' });
-    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -43,7 +37,12 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Registration error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+      res.status(503).json({ message: 'Database connection error. Please try again.' });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -53,11 +52,6 @@ exports.login = async (req, res) => {
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Please provide email and password' });
-    }
-
-    // Check if database is connected
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ message: 'Database connection unavailable' });
     }
 
     const user = await User.findOne({ email }).select('+password');
@@ -84,7 +78,12 @@ exports.login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Login error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+      res.status(503).json({ message: 'Database connection error. Please try again.' });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
