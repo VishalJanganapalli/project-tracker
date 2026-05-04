@@ -1,16 +1,23 @@
 const mongoose = require('mongoose');
 
+let cached = null;
+
 const connectDB = async () => {
+  if (cached) {
+    return cached;
+  }
+
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       bufferMaxEntries: 0,
-      bufferCommands: false,
+      bufferCommands: true,
       maxPoolSize: 10,
       minPoolSize: 1,
     });
 
+    cached = conn;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {

@@ -11,11 +11,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to database (no process.exit in serverless)
-connectDB().catch(err => {
-  console.error('Database connection error:', err);
-});
-
 // Routes
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
@@ -25,5 +20,14 @@ app.get('/', (req, res) => {
 });
 
 // ❌ REMOVE app.listen()
-// ✅ EXPORT the app
-module.exports = app;
+// ✅ EXPORT the app with database connection
+module.exports = async (req, res) => {
+  try {
+    // Ensure database is connected before handling request
+    await connectDB();
+    return app(req, res);
+  } catch (error) {
+    console.error('Database connection error:', error);
+    return res.status(500).json({ message: 'Database connection failed' });
+  }
+};
