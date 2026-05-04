@@ -7,15 +7,16 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect to database
+// Connect to database (no process.exit in serverless)
 connectDB().catch(err => {
-  console.error('Failed to connect to database:', err);
-  process.exit(1);
+  console.error('Database connection error:', err);
 });
 
+// Routes
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
@@ -23,7 +24,6 @@ app.get('/', (req, res) => {
   res.json({ message: 'Project Tracker API is running' });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// ❌ REMOVE app.listen()
+// ✅ EXPORT the app
+module.exports = app;
