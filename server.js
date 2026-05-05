@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
+const { swaggerUi, specs } = require('./config/swagger');
 
 dotenv.config();
 
@@ -27,6 +28,13 @@ app.get('/health', (req, res) => {
     mongoUriLength: process.env.MONGODB_URI ? process.env.MONGODB_URI.length : 0
   });
 });
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Project Tracker API Documentation'
+}));
 
 // ❌ REMOVE app.listen()
 // ✅ EXPORT the app with database connection
