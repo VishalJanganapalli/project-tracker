@@ -52,11 +52,27 @@ app.get('/docs', (req, res) => {
         .get { background: #61affe; }
         pre { background: #f8f8f8; padding: 10px; border-radius: 3px; overflow-x: auto; }
         .json-link { color: #007bff; text-decoration: none; }
+        .swagger-box { background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #2196f3; }
+        .button { background: #2196f3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 5px; }
       </style>
     </head>
     <body>
       <h1>Project Tracker API Documentation</h1>
       <p><strong>Base URL:</strong> https://project-tracker-puce-mu.vercel.app</p>
+      
+      <div class="swagger-box">
+        <h2>🚀 Interactive Swagger UI</h2>
+        <p>For the best interactive testing experience, use our API with the official Swagger UI:</p>
+        <a href="https://swagger.io/tools/swagger-ui/" class="button" target="_blank">Open Swagger UI</a>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+          <li>Click the "Open Swagger UI" button above</li>
+          <li>In the Swagger UI, click the "Explore" button</li>
+          <li>Enter our API specification URL: <code>https://project-tracker-puce-mu.vercel.app/api-docs</code></li>
+          <li>Enjoy full interactive testing with authentication!</li>
+        </ol>
+      </div>
+      
       <p><a href="/api-docs" class="json-link">📄 View OpenAPI JSON Specification</a></p>
       
       <h2>Authentication Endpoints</h2>
@@ -99,15 +115,32 @@ app.get('/docs', (req, res) => {
         <li>Include it in the Authorization header for protected routes: <code>Authorization: Bearer &lt;token&gt;</code></li>
       </ol>
       
-      <h2>Testing</h2>
-      <p>You can test the API using:</p>
-      <ul>
-        <li>Postman or similar API client</li>
-        <li>curl commands</li>
-        <li>Any HTTP client library</li>
-      </ul>
+      <h2>Testing Options</h2>
       
-      <p><em>For interactive testing, you can import the OpenAPI spec from <a href="/api-docs" class="json-link">/api-docs</a> into tools like Postman or Swagger Editor.</em></p>
+      <div class="swagger-box">
+        <h3>🎯 Recommended: Swagger UI Online</h3>
+        <p><strong>URL:</strong> <a href="https://swagger.io/tools/swagger-ui/" target="_blank">swagger.io/tools/swagger-ui/</a></p>
+        <p><strong>Steps:</strong></p>
+        <ol>
+          <li>Visit Swagger UI</li>
+          <li>Click "Explore" or paste this URL: <code>https://project-tracker-puce-mu.vercel.app/api-docs</code></li>
+          <li>Test all endpoints with interactive forms</li>
+          <li>Use the "Authorize" button for JWT authentication</li>
+        </ol>
+      </div>
+      
+      <div class="swagger-box">
+        <h3>📝 Alternative: Swagger Editor</h3>
+        <p><strong>URL:</strong> <a href="https://editor.swagger.io/" target="_blank">editor.swagger.io</a></p>
+        <p>Import our spec URL: <code>https://project-tracker-puce-mu.vercel.app/api-docs</code></p>
+      </div>
+      
+      <p><strong>Other Testing Tools:</strong></p>
+      <ul>
+        <li>Postman (import OpenAPI spec from /api-docs)</li>
+        <li>Insomnia (import OpenAPI spec)</li>
+        <li>curl commands or any HTTP client</li>
+      </ul>
     </body>
     </html>
   `);

@@ -6,20 +6,24 @@ const options = {
     info: {
       title: 'Project Tracker API',
       version: '1.0.0',
-      description: 'Authentication and project management API',
+      description: 'Authentication and project management API for tracking design projects, payments, and deliverables.',
       contact: {
         name: 'API Support',
         email: 'support@projecttracker.com',
       },
+      license: {
+        name: 'MIT',
+        url: 'https://opensource.org/licenses/MIT',
+      },
     },
     servers: [
       {
-        url: 'http://localhost:5000',
-        description: 'Development server',
+        url: 'https://project-tracker-puce-mu.vercel.app',
+        description: 'Production Server',
       },
       {
-        url: 'https://project-tracker-puce-mu.vercel.app',
-        description: 'Production server',
+        url: 'http://localhost:5000',
+        description: 'Development Server',
       },
     ],
     components: {
