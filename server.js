@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
-const { swaggerUi, specs } = require('./config/swagger');
+const { specs } = require('./config/swagger');
 
 dotenv.config();
 
@@ -29,12 +29,89 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-  explorer: true,
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Project Tracker API Documentation'
-}));
+// Swagger JSON Specification
+app.get('/api-docs', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(specs);
+});
+
+// Simple API Documentation HTML
+app.get('/docs', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Project Tracker API Documentation</title>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .endpoint { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .method { padding: 5px 10px; border-radius: 3px; color: white; font-weight: bold; }
+        .post { background: #49cc90; }
+        .get { background: #61affe; }
+        pre { background: #f8f8f8; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .json-link { color: #007bff; text-decoration: none; }
+      </style>
+    </head>
+    <body>
+      <h1>Project Tracker API Documentation</h1>
+      <p><strong>Base URL:</strong> https://project-tracker-puce-mu.vercel.app</p>
+      <p><a href="/api-docs" class="json-link">📄 View OpenAPI JSON Specification</a></p>
+      
+      <h2>Authentication Endpoints</h2>
+      
+      <div class="endpoint">
+        <h3><span class="method post">POST</span> /api/auth/register</h3>
+        <p><strong>Description:</strong> Register a new user</p>
+        <p><strong>Request Body:</strong></p>
+        <pre>{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "123456",
+  "role": "user"
+}</pre>
+        <p><strong>Response:</strong> 201 Created with JWT token and user data</p>
+      </div>
+      
+      <div class="endpoint">
+        <h3><span class="method post">POST</span> /api/auth/login</h3>
+        <p><strong>Description:</strong> Authenticate user and get token</p>
+        <p><strong>Request Body:</strong></p>
+        <pre>{
+  "email": "john@example.com",
+  "password": "123456"
+}</pre>
+        <p><strong>Response:</strong> 200 OK with JWT token and user data</p>
+      </div>
+      
+      <div class="endpoint">
+        <h3><span class="method get">GET</span> /api/auth/me</h3>
+        <p><strong>Description:</strong> Get current authenticated user profile</p>
+        <p><strong>Headers:</strong> Authorization: Bearer &lt;jwt_token&gt;</p>
+        <p><strong>Response:</strong> 200 OK with user profile data</p>
+      </div>
+      
+      <h2>How to Use</h2>
+      <ol>
+        <li>Register a user or login to get a JWT token</li>
+        <li>Copy the token from the response</li>
+        <li>Include it in the Authorization header for protected routes: <code>Authorization: Bearer &lt;token&gt;</code></li>
+      </ol>
+      
+      <h2>Testing</h2>
+      <p>You can test the API using:</p>
+      <ul>
+        <li>Postman or similar API client</li>
+        <li>curl commands</li>
+        <li>Any HTTP client library</li>
+      </ul>
+      
+      <p><em>For interactive testing, you can import the OpenAPI spec from <a href="/api-docs" class="json-link">/api-docs</a> into tools like Postman or Swagger Editor.</em></p>
+    </body>
+    </html>
+  `);
+});
 
 // ❌ REMOVE app.listen()
 // ✅ EXPORT the app with database connection
