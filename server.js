@@ -13,7 +13,10 @@ app.use(express.json());
 
 // Routes
 const authRoutes = require('./routes/auth');
+const clientRoutes = require('./routes/clients');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/clients', clientRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Project Tracker API is running' });
